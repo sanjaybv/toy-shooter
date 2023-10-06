@@ -1,7 +1,8 @@
-[gd_scene load_steps=9 format=3 uid="uid://bri7aadoa2oxy"]
+[gd_scene load_steps=10 format=3 uid="uid://bri7aadoa2oxy"]
 
 [ext_resource type="Texture2D" uid="uid://bvm4cuy1i4wl4" path="res://assets/SpaceShooterAssetPack_Ships.png" id="1_eteu1"]
 [ext_resource type="Script" path="res://Spaceship.gd" id="1_gexe2"]
+[ext_resource type="Script" path="res://world.gd" id="1_rdv5g"]
 [ext_resource type="Script" path="res://Target.gd" id="3_3cm7f"]
 [ext_resource type="Texture2D" uid="uid://c4m85esnxco5f" path="res://assets/SpaceShooterAssetPack_Miscellaneous.png" id="4_2gek0"]
 
@@ -22,6 +23,7 @@ polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
 outlines = Array[PackedVector2Array]([PackedVector2Array(1, 1, 318, 2, 316, 178, 4, 179)])
 
 [node name="World" type="Node2D"]
+script = ExtResource("1_rdv5g")
 
 [node name="Target" type="StaticBody2D" parent="."]
 position = Vector2(76, 50)
@@ -35,8 +37,8 @@ texture_filter = 1
 texture = SubResource("AtlasTexture_krbel")
 
 [node name="Spaceship" type="RigidBody2D" parent="."]
-collision_layer = 0
-collision_mask = 0
+mass = 0.2
+inertia = 1.0
 gravity_scale = 0.0
 script = ExtResource("1_gexe2")
 
@@ -47,6 +49,7 @@ texture = SubResource("AtlasTexture_gdki5")
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Spaceship"]
 rotation = 1.5708
+scale = Vector2(1, 1)
 polygon = PackedVector2Array(0, -4, 4, 0, 4, 4, -4, 4, -4, 0)
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="Spaceship"]
