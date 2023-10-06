@@ -1,0 +1,58 @@
+[gd_scene load_steps=9 format=3 uid="uid://bri7aadoa2oxy"]
+
+[ext_resource type="Texture2D" uid="uid://bvm4cuy1i4wl4" path="res://assets/SpaceShooterAssetPack_Ships.png" id="1_eteu1"]
+[ext_resource type="Script" path="res://Spaceship.gd" id="1_gexe2"]
+[ext_resource type="Script" path="res://Target.gd" id="3_3cm7f"]
+[ext_resource type="Texture2D" uid="uid://c4m85esnxco5f" path="res://assets/SpaceShooterAssetPack_Miscellaneous.png" id="4_2gek0"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_fnq2v"]
+radius = 4.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_krbel"]
+atlas = ExtResource("4_2gek0")
+region = Rect2(0, 0, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gdki5"]
+atlas = ExtResource("1_eteu1")
+region = Rect2(8, 0, 8, 8)
+
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_5qskf"]
+vertices = PackedVector2Array(1, 1, 318, 2, 316, 178, 4, 179)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(1, 1, 318, 2, 316, 178, 4, 179)])
+
+[node name="World" type="Node2D"]
+
+[node name="Target" type="StaticBody2D" parent="."]
+position = Vector2(76, 50)
+script = ExtResource("3_3cm7f")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Target"]
+shape = SubResource("CircleShape2D_fnq2v")
+
+[node name="Sprite2D" type="Sprite2D" parent="Target"]
+texture_filter = 1
+texture = SubResource("AtlasTexture_krbel")
+
+[node name="Spaceship" type="RigidBody2D" parent="."]
+collision_layer = 0
+collision_mask = 0
+inertia = 1.0
+gravity_scale = 0.0
+script = ExtResource("1_gexe2")
+
+[node name="Sprite2D" type="Sprite2D" parent="Spaceship"]
+texture_filter = 1
+rotation = 1.5708
+texture = SubResource("AtlasTexture_gdki5")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Spaceship"]
+rotation = 1.5708
+polygon = PackedVector2Array(0, -4, 4, 0, 4, 4, -4, 4, -4, 0)
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="Spaceship"]
+
+[node name="NavigationRegion2D" type="NavigationRegion2D" parent="Spaceship/NavigationAgent2D"]
+navigation_polygon = SubResource("NavigationPolygon_5qskf")
+
+[connection signal="target_moved" from="Target" to="Spaceship" method="_on_target_target_moved"]
