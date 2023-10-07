@@ -1,7 +1,10 @@
+class_name Spaceship
 extends RigidBody2D
 
 const MAX_SPEED: int = 100
 const DESIRED_LENGTH_AWAY: int = 30
+
+var bullet_scene: PackedScene = preload("res://bullet.tscn")
 
 @onready var navigation = $NavigationAgent2D
 
@@ -12,6 +15,7 @@ func _draw():
 	draw_line(Vector2.ZERO, vec, Color.GREEN, 1)
 
 func _process(_delta):
+	
 	queue_redraw()
 
 func _physics_process(_delta):
@@ -36,9 +40,22 @@ func _physics_process(_delta):
 	torque = fposmod(torque+PI, 2*PI) - PI
 	apply_torque(torque)
 
-func _on_target_target_moved(new_position: Vector2):
+	
+func set_target(new_position: Vector2):
 	target_position = new_position
 	var to_target: Vector2 = new_position * get_global_transform() # convert to local coordinates 
 	var desired_position_local := to_target.normalized() * (to_target.length() - DESIRED_LENGTH_AWAY)
 	var desired_position_global := get_global_transform() * desired_position_local
 	navigation.target_position = desired_position_global
+
+
+func _on_timer_timeout() -> void:
+	print("shoot")
+	shoot_bullet()
+	
+func shoot_bullet() -> void:
+	var b: RigidBody2D = bullet_scene.instantiate()
+	b.global_position = $Muzzle.global_position
+	b.linear_velocity = (target_position - global_position).normalized() * 100
+	b.global_rotation = b.linear_velocity.angle()
+	get_parent().add_child(b)
